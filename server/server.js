@@ -46,6 +46,17 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
 }
 
+// Root endpoint for deployment verification
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'online',
+    system: 'StudyVault API Server',
+    message: 'Backend is active and ready!',
+    healthCheck: '/api/health',
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // Health Check Endpoint
 app.get('/api/health', (req, res) => {
   res.status(200).json({
@@ -77,7 +88,7 @@ app.use('*', (req, res) => {
 // Error handling middleware
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 10000;
 
 const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`[StudyVault Server Running] in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
@@ -86,10 +97,6 @@ const server = app.listen(PORT, '0.0.0.0', () => {
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
   console.error(`[Unhandled Rejection]: ${err.message}`);
-  // Close server & exit process in production
-  if (process.env.NODE_ENV === 'production') {
-    server.close(() => process.exit(1));
-  }
 });
 
 module.exports = app;
