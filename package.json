@@ -1,0 +1,21 @@
+{
+  "name": "studyvault-monorepo",
+  "version": "1.0.0",
+  "description": "StudyVault — Semester Academic & PYQ Management System",
+  "scripts": {
+    "dev": "npm run dev --prefix client",
+    "client": "npm run dev --prefix client",
+    "server": "npm run dev --prefix server",
+    "seed": "npm run seed --prefix server",
+    "build": "npm run build --prefix client"
+  },
+  "keywords": [
+    "studyvault",
+    "academic",
+    "pyq",
+    "react",
+    "express"
+  ],
+  "author": "StudyVault Team",
+  "license": "MIT"
+}
