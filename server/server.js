@@ -88,11 +88,33 @@ app.use('*', (req, res) => {
 // Error handling middleware
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 10000;
+const PORT = Number(process.env.PORT) || 10000;
 
 const server = app.listen(PORT, '0.0.0.0', () => {
-  console.log(`[StudyVault Server Running] in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+  console.log(`[StudyVault Server Running] in ${process.env.NODE_ENV || 'development'} mode on primary port ${PORT}`);
 });
+
+// Render load-balancer compatibility: ensure port 10000 is always listening
+if (PORT !== 10000) {
+  try {
+    app.listen(10000, '0.0.0.0', () => {
+      console.log(`[StudyVault Server] Also listening on port 10000 for Render routing`);
+    }).on('error', (err) => {
+      console.log(`[Port 10000]: ${err.message}`);
+    });
+  } catch (e) {}
+}
+
+// Ensure port 5000 is also listening if PORT is different
+if (PORT !== 5000) {
+  try {
+    app.listen(5000, '0.0.0.0', () => {
+      console.log(`[StudyVault Server] Also listening on port 5000`);
+    }).on('error', (err) => {
+      console.log(`[Port 5000]: ${err.message}`);
+    });
+  } catch (e) {}
+}
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
